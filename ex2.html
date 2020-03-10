@@ -3,18 +3,39 @@
   <head>
     <meta charset="utf-8">
     <title></title>
+    <script>
+      function ndHandler(self) {
+        var target=document.querySelector('body');
+        var alist=document.querySelectorAll('a');
+        if(self.value == 'night') {
+          target.style.backgroundColor='black';
+          target.style.color='white';
+          self.value='day';
+          for(var i=0;i<alist.length;i++) {
+            alist[i].style.color='powderblue';
+          }
+        }
+        else {
+          target.style.backgroundColor='white';
+          target.style.color='black';
+          self.value='night';
+          for(var i=0;i<alist.length;i++) {
+            alist[i].style.color='blue';
+          }
+        }
+      }
+    </script>
   </head>
   <body>
-    <input type='button' value='night' onclick="
-    document.querySelector('body').style.backgroundColor='black';
-    document.querySelector('body').style.color='white';
-    ">
-    <input type='button' value='day' onclick="
-    document.querySelector('body').style.backgroundColor='white';
-    document.querySelector('body').style.color='black';
-    ">
+    <input type='button' value='night' onclick="ndHandler(this);">
+    <ol>
+      <li><a href="">우왕기</a></li>
+      <li><a href="">왕기모</a></li>
+      <li><a href="">기모링</a></li>
+    </ol>
     <h1>우왕기모링!!</h1>
     <p>우왕기모링!!우왕기모링!!우왕기모링!!우왕기모링!!우왕기모링!!<br>우왕기모링!!우왕기모링!!우왕기모링!!우왕기모링!!우왕기모링!!</p>
     <a href=""><h1>우왕기모링!!</h1></a>
+    <input type='button' value='night' onclick="ndHandler(this);">
   </body>
 </html>
