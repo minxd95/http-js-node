@@ -1,8 +1,16 @@
+<style>
+  .test:before {
+    content:"content";
+    color: red;
+  }
+</style>
+<div class='test'>
 <script>
-  document.write(this);
-  document.write(this.value);
-  this.value=2;
-  document.write(this.value);
-  this.sasda=2;
-  document.write(this.sasda);
+  var a={
+    myfunc:function(){
+      document.write("test");
+    }
+  }
+  a.myfunc();
 </script>
+</div>
