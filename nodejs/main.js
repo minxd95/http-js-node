@@ -8,7 +8,7 @@ var app = http.createServer(function(request,response){
     var title = queryData.id;
     console.log(queryData.id);
     if(_url == '/'){
-      title='Welcome';
+      title='WEB';
     }
     if(_url == '/favicon.ico'){
       response.writeHead(404);
@@ -16,7 +16,8 @@ var app = http.createServer(function(request,response){
       return;
     }
     response.writeHead(200);
-    fs.readFile(`data/${queryData.id}`, 'utf8', function(err,description) {
+    fs.readFile(`data/${title}`, 'utf8', (err,description) => {
+      if(err) throw err;
       var template = `
       <!doctype html>
       <html>
