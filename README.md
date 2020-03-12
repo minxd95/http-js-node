@@ -1,4 +1,6 @@
 # 변수관련 참고
+
+`exam1.js`
 ```javascript
 let _value = 1234;
 (() => {
