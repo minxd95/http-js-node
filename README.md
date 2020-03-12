@@ -193,7 +193,6 @@ console.log(test(1,2,3));
 - [js-interview-prep/temporal-dead-zone](https://github.com/ajzawawi/js-interview-prep/blob/master/answers/es6/temporal-dead-zone.md)
 - [why-tdz](http://2ality.com/2015/10/why-tdz.html)
 
-
 # 화살표 함수(Arrow Function)
 
 ```javascript
