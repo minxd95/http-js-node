@@ -160,3 +160,33 @@ const aa // Missing initializer in const declaration
 ## Reference
 - [js-interview-prep/temporal-dead-zone](https://github.com/ajzawawi/js-interview-prep/blob/master/answers/es6/temporal-dead-zone.md)
 - [why-tdz](http://2ality.com/2015/10/why-tdz.html)
+
+## 함수에서의 const, let
+
+`let`함수는 재할당 가능, 재선언 불가
+`const`함수는 재할당 불가, 재선언 불가
+`var`함수는 재할당, 재선언 가능
+
+``` javascript
+/*
+const test = (a,b) => {
+  return a+b;
+}
+test = (a,b,c) => {
+  return a*b*c;
+}
+오류 발생
+*/
+
+let test = (a,b) => {
+  return a+b;
+}
+console.log(test(1,3));
+test = (a,b,c) => {
+  return a*b*c;
+}
+console.log(test(1,2,3));
+// 4
+// 6
+
+```
