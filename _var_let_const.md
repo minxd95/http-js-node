@@ -164,7 +164,9 @@ const aa // Missing initializer in const declaration
 ## 함수에서의 const, let
 
 `let`함수는 재할당 가능, 재선언 불가
+
 `const`함수는 재할당 불가, 재선언 불가
+
 `var`함수는 재할당, 재선언 가능
 
 ``` javascript
