@@ -5,39 +5,65 @@ var url = require('url');
 var app = http.createServer(function(request,response){
     var _url = request.url;
     var queryData = url.parse(_url, true).query; // 요청된 url의 쿼리데이터 가져오기
-    var title = queryData.id;
-    console.log(queryData.id);
-    if(_url == '/'){
-      title='WEB';
-    }
-    if(_url == '/favicon.ico'){
+    const pathname = url.parse(_url, true).pathname;
+    let title;
+
+    if(pathname=='/') {
+      if(queryData.id==undefined) {
+        title = 'Welcome';
+        description = 'Hello, node.js'
+        var template = `
+        <!doctype html>
+        <html>
+        <head>
+          <title>WEB1 - ${title}</title>
+          <meta charset="utf-8">
+        </head>
+        <body>
+          <h1><a href="/">WEB</a></h1>
+          <ol>
+            <li><a href="/?id=HTML">HTML</a></li>
+            <li><a href="/?id=CSS">CSS</a></li>
+            <li><a href="/?id=JavaScript">JavaScript</a></li>
+          </ol>
+          <h2>${title}</h2>
+          <p>${description}</p>
+        </body>
+        </html>
+        `;
+        response.writeHead(200);
+        response.end(template);
+      } else {
+        title=queryData.id;
+        fs.readFile(`data/${title}`, 'utf8', (err,description) => {
+          //if(err) throw err;
+          var template = `
+          <!doctype html>
+          <html>
+          <head>
+            <title>WEB1 - ${title}</title>
+            <meta charset="utf-8">
+          </head>
+          <body>
+            <h1><a href="/">WEB</a></h1>
+            <ol>
+              <li><a href="/?id=HTML">HTML</a></li>
+              <li><a href="/?id=CSS">CSS</a></li>
+              <li><a href="/?id=JavaScript">JavaScript</a></li>
+            </ol>
+            <h2>${title}</h2>
+            <p>${description}</p>
+          </body>
+          </html>
+          `;
+          response.writeHead(200);
+          response.end(template);
+        });
+      }
+    } else {
       response.writeHead(404);
-      response.end();
-      return;
+      response.end('Not found');
     }
-    response.writeHead(200);
-    fs.readFile(`data/${title}`, 'utf8', (err,description) => {
-      if(err) throw err;
-      var template = `
-      <!doctype html>
-      <html>
-      <head>
-        <title>WEB1 - ${title}</title>
-        <meta charset="utf-8">
-      </head>
-      <body>
-        <h1><a href="/">WEB</a></h1>
-        <ol>
-          <li><a href="/?id=HTML">HTML</a></li>
-          <li><a href="/?id=CSS">CSS</a></li>
-          <li><a href="/?id=JavaScript">JavaScript</a></li>
-        </ol>
-        <h2>${title}</h2>
-        <p>${description}</p>
-      </body>
-      </html>
-      `;
-      response.end(template);
-    });
+
 });
 app.listen(3000);
