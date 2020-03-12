@@ -60,7 +60,7 @@ console.log(_value);
 // 4321
 // 'var _value'는 함수스코프이기 때문에 제어문의 중괄호('{}')에는 영향받지 않음
 ```
-***
+****
 # var, let, const 차이점은?
 - `var`는 `function-scoped`이고, `let`, `const`는 `block-scoped`입니다.
 
@@ -255,7 +255,7 @@ console.log(test(1,2,3));
 ## Reference
 - [js-interview-prep/temporal-dead-zone](https://github.com/ajzawawi/js-interview-prep/blob/master/answers/es6/temporal-dead-zone.md)
 - [why-tdz](http://2ality.com/2015/10/why-tdz.html)
-***
+****
 # 화살표 함수(Arrow Function)
 
 ```javascript
