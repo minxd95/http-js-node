@@ -1,3 +1,64 @@
+# 변수관련 참고
+```javascript
+let _value = 1234;
+(() => {
+  _value = 4321;
+  console.log(_value);
+})();
+console.log(_value);
+// 결과값
+// 4321
+// 4321
+```
+
+`exam2.js`
+```javascript
+let _value = 1234;
+(() => {
+  let _value = 4321;
+  console.log(_value);
+})();
+console.log(_value);
+// 결과값
+// 4321
+// 1234
+```
+
+`exam3.js`
+```javascript
+var _value = 1234;
+(() => {
+  var _value = 4321;
+  console.log(_value);
+})();
+console.log(_value);
+// 결과값
+// 4321
+// 1234
+```
+
+`exam4.js`
+```javascript
+(() => {
+  var _value = 4321;
+  console.log(_value);
+})();
+console.log(_value); // 'not defined'
+```
+
+`exam5.js`
+```javascript
+for(i=0;i<=0;i++) {
+  var _value = 4321;
+  console.log(_value);
+}
+console.log(_value);
+// 결과값
+// 4321
+// 4321
+// 'var _value'는 함수스코프이기 때문에 제어문의 중괄호('{}')에는 영향받지 않음
+```
+
 # var, let, const 차이점은?
 - `var`는 `function-scoped`이고, `let`, `const`는 `block-scoped`입니다.
 
