@@ -2,12 +2,20 @@ var http = require('http');
 var fs = require('fs');
 var url = require('url');
 
-var app = http.createServer(function(request,response){
+var app = http.createServer((request,response) => {
     var _url = request.url;
     var queryData = url.parse(_url, true).query; // 요청된 url의 쿼리데이터 가져오기
     const pathname = url.parse(_url, true).pathname;
     let title;
-
+    let filelist="";
+    let files=[];
+    fs.readdir("./data", (err, files) => {
+      if(err) throw err;
+    });
+    files.forEach((file,index) => {
+      filelist+=`<li><a href="/?id=${file}">${file}</a></li>`;
+    });
+    console.log(filelist);
     if(pathname=='/') {
       if(queryData.id==undefined) {
         title = 'Welcome';
@@ -22,9 +30,7 @@ var app = http.createServer(function(request,response){
         <body>
           <h1><a href="/">WEB</a></h1>
           <ol>
-            <li><a href="/?id=HTML">HTML</a></li>
-            <li><a href="/?id=CSS">CSS</a></li>
-            <li><a href="/?id=JavaScript">JavaScript</a></li>
+            ${filelist}
           </ol>
           <h2>${title}</h2>
           <p>${description}</p>
@@ -47,9 +53,7 @@ var app = http.createServer(function(request,response){
           <body>
             <h1><a href="/">WEB</a></h1>
             <ol>
-              <li><a href="/?id=HTML">HTML</a></li>
-              <li><a href="/?id=CSS">CSS</a></li>
-              <li><a href="/?id=JavaScript">JavaScript</a></li>
+              ${filelist}
             </ol>
             <h2>${title}</h2>
             <p>${description}</p>
