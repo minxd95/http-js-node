@@ -3,7 +3,7 @@ const fs = require("fs");
 const url = require("url");
 const qs = require("querystring");
 
-const mContent = (title, filelist, body) => {
+const mContent = (title, filelist, body, control) => {
   return `<!doctype html>
     <html>
       <head>
@@ -15,7 +15,7 @@ const mContent = (title, filelist, body) => {
         <ol>
           ${filelist}
         </ol>
-        <p><a href="/write">write article</a></p>
+        ${control}
         ${body}
       </body>
     </html>`;
@@ -46,7 +46,8 @@ let app = http.createServer((request, response) => {
         let template = mContent(
           title,
           filelist,
-          `<h2>${title}</h2><p>${description}</p>`
+          `<h2>${title}</h2><p>${description}</p>`,
+          `<p><a href="/write">Write</a></p>`
         );
         response.writeHead(200);
         response.end(template);
@@ -57,7 +58,12 @@ let app = http.createServer((request, response) => {
           let template = mContent(
             title,
             filelist,
-            `<h2>${title}</h2><p>${description}</p>`
+            `<h2>${title}</h2><p>${description}</p>`,
+            `<p><a href="/write">Write</a> <a href="/update?id=${title}">Update</a>
+            <form action="delete_ok" method="post">
+              <input type="hidden" name="id" value="${title}">
+              <input type="submit" value="Delete">
+            </form>`
           );
           response.writeHead(200);
           response.end(template);
@@ -66,16 +72,17 @@ let app = http.createServer((request, response) => {
     });
   } else if (pathname == "/write") {
     fs.readdir("./data", (err, files) => {
-      title = "WEB1 - Write";
+      title = "Write";
       filelist = mList(files);
       let template = mContent(
         title,
         filelist,
         `<h2>Write article</h2><p><form action="/write_ok" method="post">
           <p><input type="text" name="title" placeholder="Write title here.." /></p>
-          <p><textarea name="content" style="width:500px;height:300px" placeholder="Write content here.." /></textarea></p>
+          <p><textarea name="description" style="width:500px;height:300px" placeholder="Write description here.." /></textarea></p>
         <p><input type="submit" /></p>
-              </form></p>`
+              </form></p>`,
+        `<a href="javascript:history.back()">Back</a>`
       );
       response.writeHead(200);
       response.end(template);
@@ -90,10 +97,67 @@ let app = http.createServer((request, response) => {
     request.on("end", () => {
       const post = qs.parse(body);
       const title = post.title;
-      const content = post.content;
-      fs.writeFile(`data/${title}`, content, "utf8", () => {
+      const description = post.description;
+      fs.writeFile(`data/${title}`, description, "utf8", () => {
         response.writeHead(302, { Location: `/?id=${title}` });
-        response.end(`title:${title}\ncontent:${content}`);
+        response.end();
+      });
+    });
+    //}
+  } else if (pathname == "/update") {
+    fs.readdir("./data", (err, files) => {
+      title = `${queryData.id}`;
+      filelist = mList(files);
+      fs.readFile(`data/${title}`, "utf8", (err, description) => {
+        let template = mContent(
+          title,
+          filelist,
+          `<h2>Update article</h2><p><form action="/update_ok" method="post">
+          <input type="hidden" name="id" value='${title}'/>
+          <p><input type="text" name="title" placeholder="Write title here.." value='${title}'/></p>
+          <p><textarea name="description" style="width:500px;height:300px" placeholder="Write description here.." />${description}</textarea></p>
+        <p><input type="submit" /></p>
+              </form></p>`,
+          `<a href='javascript:history.back()'>Back</a>`
+        );
+        response.writeHead(200);
+        response.end(template);
+      });
+    });
+  } else if (pathname == "/update_ok") {
+    // if (request.method == "POST") {
+    var body = "";
+    request.on("data", data => {
+      // if (body.length > 1e6) request.connection.destroy(); 과도한 데이터 수신 시 전송 종료.
+      body += data;
+    });
+    request.on("end", () => {
+      const post = qs.parse(body);
+      const title = post.title;
+      const id = post.id;
+      const description = post.description;
+      console.log(post);
+      fs.rename(`data/${id}`, `data/${title}`, err => {
+        fs.writeFile(`data/${title}`, description, "utf8", err => {
+          response.writeHead(302, { Location: `/?id=${title}` });
+          response.end();
+        });
+      });
+    });
+    //}
+  } else if (pathname == "/delete_ok") {
+    // if (request.method == "POST") {
+    var body = "";
+    request.on("data", data => {
+      // if (body.length > 1e6) request.connection.destroy(); 과도한 데이터 수신 시 전송 종료.
+      body += data;
+    });
+    request.on("end", () => {
+      const post = qs.parse(body);
+      const id = post.id;
+      fs.unlink(`data/${id}`, err => {
+        response.writeHead(302, { Location: `/` });
+        response.end();
       });
     });
     //}
