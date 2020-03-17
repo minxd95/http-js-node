@@ -2,9 +2,9 @@ const http = require("http");
 const fs = require("fs");
 const url = require("url");
 const qs = require("querystring");
-
-const mContent = (title, filelist, body, control) => {
-  return `<!doctype html>
+const m = {
+  Content: (title, filelist, body, control) => {
+    return `<!doctype html>
     <html>
       <head>
         <title>WEB1 - ${title}</title>
@@ -19,13 +19,14 @@ const mContent = (title, filelist, body, control) => {
         ${body}
       </body>
     </html>`;
-};
-const mList = files => {
-  let filelist = "";
-  files.forEach(element => {
-    filelist += `<li><a href="/?id=${element}">${element}</a></li>`;
-  });
-  return filelist;
+  },
+  List: files => {
+    let filelist = "";
+    files.forEach(element => {
+      filelist += `<li><a href="/?id=${element}">${element}</a></li>`;
+    });
+    return filelist;
+  }
 };
 
 let app = http.createServer((request, response) => {
@@ -39,11 +40,11 @@ let app = http.createServer((request, response) => {
   if (pathname == "/") {
     fs.readdir("./data", (err, files) => {
       // if (err) throw err;
-      filelist = mList(files);
+      filelist = m.List(files);
       if (queryData.id == undefined) {
         title = "Welcome";
         description = "Hello, node.js";
-        let template = mContent(
+        let template = m.Content(
           title,
           filelist,
           `<h2>${title}</h2><p>${description}</p>`,
@@ -55,7 +56,7 @@ let app = http.createServer((request, response) => {
         title = queryData.id;
         fs.readFile(`data/${title}`, "utf8", (err, description) => {
           //if(err) throw err;
-          let template = mContent(
+          let template = m.Content(
             title,
             filelist,
             `<h2>${title}</h2><p>${description}</p>`,
@@ -73,8 +74,8 @@ let app = http.createServer((request, response) => {
   } else if (pathname == "/write") {
     fs.readdir("./data", (err, files) => {
       title = "Write";
-      filelist = mList(files);
-      let template = mContent(
+      filelist = m.List(files);
+      let template = m.Content(
         title,
         filelist,
         `<h2>Write article</h2><p><form action="/write_ok" method="post">
@@ -107,9 +108,9 @@ let app = http.createServer((request, response) => {
   } else if (pathname == "/update") {
     fs.readdir("./data", (err, files) => {
       title = `${queryData.id}`;
-      filelist = mList(files);
+      filelist = m.List(files);
       fs.readFile(`data/${title}`, "utf8", (err, description) => {
-        let template = mContent(
+        let template = m.Content(
           title,
           filelist,
           `<h2>Update article</h2><p><form action="/update_ok" method="post">
