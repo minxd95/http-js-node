@@ -2,32 +2,8 @@ const http = require("http");
 const fs = require("fs");
 const url = require("url");
 const qs = require("querystring");
-const m = {
-  Content: (title, filelist, body, control) => {
-    return `<!doctype html>
-    <html>
-      <head>
-        <title>WEB1 - ${title}</title>
-        <meta charset="utf-8">
-      </head>
-      <body>
-        <h1><a href="/">WEB</a></h1>
-        <ol>
-          ${filelist}
-        </ol>
-        ${control}
-        ${body}
-      </body>
-    </html>`;
-  },
-  List: files => {
-    let filelist = "";
-    files.forEach(element => {
-      filelist += `<li><a href="/?id=${element}">${element}</a></li>`;
-    });
-    return filelist;
-  }
-};
+const m = require("./lib/template.js");
+const path = require("path");
 
 let app = http.createServer((request, response) => {
   // 브라우저에서 접속시마다 호출됨
@@ -54,7 +30,9 @@ let app = http.createServer((request, response) => {
         response.end(template);
       } else {
         title = queryData.id;
-        fs.readFile(`data/${title}`, "utf8", (err, description) => {
+        filteredId = path.parse(queryData.id).base;
+        console.log(filteredId);
+        fs.readFile(`data/${filteredId}`, "utf8", (err, description) => {
           //if(err) throw err;
           let template = m.Content(
             title,
@@ -108,8 +86,10 @@ let app = http.createServer((request, response) => {
   } else if (pathname == "/update") {
     fs.readdir("./data", (err, files) => {
       title = `${queryData.id}`;
+      filteredId = path.parse(queryData.id).base;
+      console.log(filteredId);
       filelist = m.List(files);
-      fs.readFile(`data/${title}`, "utf8", (err, description) => {
+      fs.readFile(`data/${filteredId}`, "utf8", (err, description) => {
         let template = m.Content(
           title,
           filelist,
@@ -135,11 +115,12 @@ let app = http.createServer((request, response) => {
     request.on("end", () => {
       const post = qs.parse(body);
       const title = post.title;
+      const filteredId = path.parse(post.title).base;
       const id = post.id;
       const description = post.description;
       console.log(post);
-      fs.rename(`data/${id}`, `data/${title}`, err => {
-        fs.writeFile(`data/${title}`, description, "utf8", err => {
+      fs.rename(`data/${id}`, `data/${filteredId}`, err => {
+        fs.writeFile(`data/${filteredId}`, description, "utf8", err => {
           response.writeHead(302, { Location: `/?id=${title}` });
           response.end();
         });
@@ -155,8 +136,8 @@ let app = http.createServer((request, response) => {
     });
     request.on("end", () => {
       const post = qs.parse(body);
-      const id = post.id;
-      fs.unlink(`data/${id}`, err => {
+      const filteredId = path.parse(post.id).base;
+      fs.unlink(`data/${filteredId}`, err => {
         response.writeHead(302, { Location: `/` });
         response.end();
       });
