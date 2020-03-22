@@ -30,8 +30,8 @@ const make = {
   <head>
     <title>정글러 - ${title}</title>
     <meta charset="utf-8">
-    <script src="https://minxd95.github.io/study/js/colors.js"></script>
-    <link rel="stylesheet" href="https://minxd95.github.io/study/js/style.css">
+    <script src="https://minxd95.github.io/http-js-node/js/colors.js"></script>
+    <link rel="stylesheet" href="https://minxd95.github.io/http-js-node/js/style.css">
   </head>
   <body>
     <div class="wrap">
