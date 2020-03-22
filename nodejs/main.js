@@ -58,7 +58,7 @@ let app = http.createServer((request, response) => {
         filelist,
         `<h2>Write article</h2><p><form action="/write_ok" method="post">
           <p><input type="text" name="title" placeholder="Write title here.." /></p>
-          <p><textarea name="description" style="width:500px;height:300px" placeholder="Write description here.." /></textarea></p>
+          <p><textarea name="description" style="width:500px;height:300px" placeholder="Write description here.." ></textarea></p>
         <p><input type="submit" /></p>
               </form></p>`,
         `<a href="javascript:history.back()">Back</a>`
